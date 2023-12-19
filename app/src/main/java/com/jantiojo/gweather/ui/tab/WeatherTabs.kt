@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.jantiojo.gweather.R
 import com.jantiojo.gweather.ui.theme.TabIconColor
 import com.jantiojo.gweather.ui.weather.screen.CurrentWeatherScreen
+import com.jantiojo.gweather.ui.weather.screen.WeatherListScreen
 
 @Composable
 fun AnimatedBottomTabs() {
@@ -108,12 +109,6 @@ fun AnimatedBottomTab(
             }
         }
     }
-}
-
-@Composable
-fun WeatherListScreen() {
-    // Your messages screen content goes here
-    Text("Weather List Screen", modifier = Modifier.fillMaxSize().padding(16.dp).background(Color.Green))
 }
 
 @Composable
