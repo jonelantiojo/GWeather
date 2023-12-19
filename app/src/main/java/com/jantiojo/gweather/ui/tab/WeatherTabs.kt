@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jantiojo.gweather.R
 import com.jantiojo.gweather.ui.theme.TabIconColor
+import com.jantiojo.gweather.ui.weather.screen.CurrentWeatherScreen
 
 @Composable
 fun AnimatedBottomTabs() {
@@ -107,12 +108,6 @@ fun AnimatedBottomTab(
             }
         }
     }
-}
-
-@Composable
-fun CurrentWeatherScreen() {
-    // Your home screen content goes here
-    Text("Current Weather Screen", modifier = Modifier.padding(16.dp))
 }
 
 @Composable
