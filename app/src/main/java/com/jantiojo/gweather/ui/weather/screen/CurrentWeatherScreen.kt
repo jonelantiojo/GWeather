@@ -1,5 +1,7 @@
 package com.jantiojo.gweather.ui.weather.screen
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,34 +17,62 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jantiojo.gweather.R
 import com.jantiojo.gweather.core.component.DrawableIconComponent
+import com.jantiojo.gweather.core.component.NetworkImage
 import com.jantiojo.gweather.ui.theme.GWeatherTheme
 import com.jantiojo.gweather.ui.theme.Purple40
+import com.jantiojo.gweather.ui.weather.screen.model.CurrentWeatherUIModelPreviewProvider
+import com.jantiojo.gweather.ui.weather.screen.model.CurrentWeatherUiModel
+import com.jantiojo.gweather.ui.weather.viewmodel.CurrentWeatherViewModel
 
 @Composable
-fun CurrentWeatherScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.fillMaxSize()) {
-        WeatherInfoCard()
-
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            SunPlacementTimeInfo(modifier = Modifier.weight(1f))
-            SunPlacementTimeInfo(modifier = Modifier.weight(1f))
-        }
-    }
-
+fun CurrentWeatherScreen(
+    modifier: Modifier = Modifier,
+    viewModel: CurrentWeatherViewModel = hiltViewModel()
+) {
+    val currentWeather by viewModel.currentWeatherViewState.collectAsStateWithLifecycle()
+    CurrentWeatherContent(currentWeatherUiModel = currentWeather)
 }
 
+@Composable
+private fun CurrentWeatherContent(
+    modifier: Modifier = Modifier,
+    currentWeatherUiModel: CurrentWeatherUiModel
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        WeatherInfoCard(currentWeatherUiModel)
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            SunPlacementTimeInfo(
+                modifier = Modifier.weight(1f),
+                icon = R.drawable.sunrise,
+                titleRes = R.string.sun_rise,
+                time = currentWeatherUiModel.sunRiseTime
+            )
+            SunPlacementTimeInfo(
+                modifier = Modifier.weight(1f),
+                icon = R.drawable.sunset,
+                titleRes = R.string.sun_set,
+                time = currentWeatherUiModel.sunSetTime
+            )
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun WeatherInfoCard() {
+private fun WeatherInfoCard(currentWeatherUiModel: CurrentWeatherUiModel) {
     Card(
         onClick = {},
         modifier = Modifier
@@ -68,23 +98,27 @@ private fun WeatherInfoCard() {
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
-                    text = "Manila Philippines",
+                    text = currentWeatherUiModel.locationName,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.SemiBold
                     ),
                     color = Color.Black
                 )
                 Text(
-                    text = "Monday Dec 19 | 09:00AM",
+                    text = currentWeatherUiModel.currentDateAndTime,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.Normal
                     ),
                     color = Color.Black
                 )
             }
-            DrawableIconComponent(iconRes = R.drawable.moon, modifier = Modifier.size(100.dp))
+            NetworkImage(
+                imageUrl = currentWeatherUiModel.weatherIcon,
+                modifier = Modifier
+                    .size(100.dp)
+            )
             Text(
-                text = "Sunny",
+                text = currentWeatherUiModel.weatherDescription,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold
                 ),
@@ -92,7 +126,7 @@ private fun WeatherInfoCard() {
             )
 
             Text(
-                text = "33°C",
+                text = currentWeatherUiModel.weatherTemperature,
                 style = MaterialTheme.typography.displayLarge.copy(
                     fontWeight = FontWeight.Bold
                 ),
@@ -105,7 +139,12 @@ private fun WeatherInfoCard() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SunPlacementTimeInfo(modifier: Modifier = Modifier) {
+private fun SunPlacementTimeInfo(
+    modifier: Modifier = Modifier,
+    @StringRes titleRes: Int,
+    @DrawableRes icon: Int,
+    time: String
+) {
     Card(
         onClick = {},
         modifier = modifier
@@ -128,7 +167,7 @@ private fun SunPlacementTimeInfo(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Text(
-                text = "SunSet",
+                text = stringResource(id = titleRes),
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.Bold
                 ),
@@ -136,9 +175,9 @@ private fun SunPlacementTimeInfo(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(vertical = 10.dp)
             )
 
-            DrawableIconComponent(iconRes = R.drawable.sunrise, modifier = Modifier.size(64.dp))
+            DrawableIconComponent(iconRes = icon, modifier = Modifier.size(64.dp))
             Text(
-                text = "10 PM",
+                text = time,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold
                 ),
@@ -150,10 +189,10 @@ private fun SunPlacementTimeInfo(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun CurrentWeatherScreenPreview() {
+private fun CurrentWeatherScreenPreview(@PreviewParameter(CurrentWeatherUIModelPreviewProvider::class) model: CurrentWeatherUiModel) {
     GWeatherTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            CurrentWeatherScreen()
+            CurrentWeatherContent(currentWeatherUiModel = model)
         }
     }
 }

@@ -2,7 +2,7 @@ package com.jantiojo.gweather.di
 
 import android.content.Context
 import com.jantiojo.gweather.BuildConfig
-import com.jantiojo.gweather.data.api.GWeatherApiService
+import com.jantiojo.gweather.data.network.api.GWeatherApiService
 import com.jantiojo.gweather.data.network.interceptor.CacheInterceptor
 import com.jantiojo.gweather.data.network.interceptor.ForceCacheInterceptor
 import com.jantiojo.gweather.data.network.interceptor.NetworkRequestInterceptor

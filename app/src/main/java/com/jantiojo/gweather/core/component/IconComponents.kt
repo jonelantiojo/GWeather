@@ -1,5 +1,6 @@
 package com.jantiojo.gweather.core.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,7 +14,7 @@ import com.jantiojo.gweather.ui.theme.GWeatherTheme
 fun DrawableIconComponent(
     modifier: Modifier = Modifier,
     tintColor: Color = Color.Unspecified,
-    iconRes: Int
+    @DrawableRes iconRes: Int
 ) {
     Icon(
         painter = painterResource(id = iconRes),
