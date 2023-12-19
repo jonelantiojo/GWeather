@@ -5,6 +5,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 val weatherKey: String = gradleLocalProperties(rootDir).getProperty("weatherApiKey")
@@ -89,6 +90,11 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
 
+    //Logging
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
+    //Google Location Service
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
