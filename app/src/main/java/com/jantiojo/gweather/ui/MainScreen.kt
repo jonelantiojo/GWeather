@@ -1,12 +1,12 @@
 package com.jantiojo.gweather.ui
 
 import AnimatedBottomTabsApp
-import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.jantiojo.gweather.ui.onboarding.screen.LoginPage
+import com.jantiojo.gweather.ui.onboarding.screen.LoginScreen
+import com.jantiojo.gweather.ui.onboarding.screen.SignUpScreen
 
 @Composable
 fun ScreenMain() {
@@ -15,17 +15,14 @@ fun ScreenMain() {
     NavHost(navController = navController, startDestination = Routes.Login.route) {
 
         composable(Routes.Login.route) {
-            LoginPage(navController = navController)
+            LoginScreen(navController = navController)
         }
 
         composable(Routes.SignUp.route) {
-//            SignUp(navController = navController)
+            SignUpScreen(navController = navController)
         }
 
         composable(Routes.Home.route) {
-            BackHandler(true) {
-                //DO NOTHING
-            }
             AnimatedBottomTabsApp()
         }
     }

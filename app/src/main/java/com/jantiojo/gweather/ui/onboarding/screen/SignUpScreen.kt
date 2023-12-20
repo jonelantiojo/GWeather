@@ -41,22 +41,7 @@ import com.jantiojo.gweather.ui.theme.Purple40
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavHostController = rememberNavController()) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        ClickableText(
-            text = AnnotatedString(stringResource(id = R.string.sign_up_here)),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(20.dp),
-            onClick = { navController.navigate(Routes.SignUp.route) },
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontFamily = FontFamily.Default,
-                textDecoration = TextDecoration.Underline,
-                color = Purple40
-            )
-        )
-    }
+fun SignUpScreen(navController: NavHostController = rememberNavController()) {
     Column(
         modifier = Modifier.padding(20.dp),
         verticalArrangement = Arrangement.Center,
@@ -65,6 +50,7 @@ fun LoginScreen(navController: NavHostController = rememberNavController()) {
 
         val username = remember { mutableStateOf(TextFieldValue()) }
         val password = remember { mutableStateOf(TextFieldValue()) }
+        val confirmPassword = remember { mutableStateOf(TextFieldValue()) }
 
         DrawableIconComponent(iconRes = R.drawable.weather)
         Text(
@@ -88,10 +74,18 @@ fun LoginScreen(navController: NavHostController = rememberNavController()) {
             onValueChange = { password.value = it })
 
         Spacer(modifier = Modifier.height(20.dp))
+        TextField(
+            label = { Text(text = stringResource(id = R.string.confirm_password)) },
+            value = confirmPassword.value,
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            onValueChange = { confirmPassword.value = it })
+
+        Spacer(modifier = Modifier.height(20.dp))
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
             Button(
                 onClick = {
-                    navController.navigate(Routes.Home.route) {
+                    navController.navigate(Routes.Login.route) {
                         popUpTo(Routes.Login.route) {
                             inclusive = true
                         }
@@ -102,7 +96,7 @@ fun LoginScreen(navController: NavHostController = rememberNavController()) {
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text(text = stringResource(id = R.string.login))
+                Text(text = stringResource(id = R.string.sign_up))
             }
         }
     }
@@ -110,8 +104,8 @@ fun LoginScreen(navController: NavHostController = rememberNavController()) {
 
 @Preview
 @Composable
-fun LoginScreenPreview() {
+fun SignUpScreenPreview() {
     GWeatherTheme {
-        LoginScreen()
+        SignUpScreen()
     }
 }
