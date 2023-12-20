@@ -15,3 +15,5 @@ fun CurrentWeatherEntity.toCurrentWeatherUiModel() = CurrentWeatherUiModel(
     sunRiseTime = sunRiseUtc.formatTo("h:mm a"),
     sunSetTime = sunSetUtc.formatTo("h:mm a")
 )
+
+fun List<CurrentWeatherEntity>.toCurrentWeatherUiModelList() = map { it.toCurrentWeatherUiModel() }

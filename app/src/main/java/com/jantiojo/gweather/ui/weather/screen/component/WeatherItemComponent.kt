@@ -18,15 +18,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.jantiojo.gweather.R
-import com.jantiojo.gweather.core.component.DrawableIconComponent
+import com.jantiojo.gweather.core.component.NetworkImage
 import com.jantiojo.gweather.ui.theme.GWeatherTheme
 import com.jantiojo.gweather.ui.theme.Purple40
+import com.jantiojo.gweather.ui.weather.screen.model.CurrentWeatherUIModelPreviewProvider
+import com.jantiojo.gweather.ui.weather.screen.model.CurrentWeatherUiModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeatherItemComponent(modifier: Modifier = Modifier) {
+fun WeatherItemComponent(modifier: Modifier = Modifier, weatherUiModel: CurrentWeatherUiModel) {
     Card(
         onClick = {},
         modifier = modifier
@@ -49,10 +51,14 @@ fun WeatherItemComponent(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
 
-            DrawableIconComponent(iconRes = R.drawable.sunrise, modifier = Modifier.size(64.dp))
+            NetworkImage(
+                imageUrl = weatherUiModel.weatherIcon,
+                modifier = Modifier
+                    .size(64.dp)
+            )
             Column {
                 Text(
-                    text = "Clouds",
+                    text = weatherUiModel.weatherName,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold
                     ),
@@ -60,7 +66,7 @@ fun WeatherItemComponent(modifier: Modifier = Modifier) {
                 )
 
                 Text(
-                    text = "Broken Clouds",
+                    text = weatherUiModel.weatherDescription,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Normal
                     ),
@@ -73,8 +79,8 @@ fun WeatherItemComponent(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun WeatherItemComponentPreview() {
+private fun WeatherItemComponentPreview(@PreviewParameter(CurrentWeatherUIModelPreviewProvider::class) model: CurrentWeatherUiModel) {
     GWeatherTheme {
-        WeatherItemComponent()
+        WeatherItemComponent(weatherUiModel = model)
     }
 }

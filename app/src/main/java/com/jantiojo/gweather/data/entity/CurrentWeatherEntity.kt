@@ -1,6 +1,11 @@
 package com.jantiojo.gweather.data.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "weather")
 data class CurrentWeatherEntity(
+    @PrimaryKey(autoGenerate = false)
     val id: Long,
     val latitude: Double,
     val longitude: Double,
