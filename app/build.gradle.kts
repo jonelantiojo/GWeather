@@ -93,6 +93,12 @@ dependencies {
     //Logging
     implementation("com.jakewharton.timber:timber:5.0.1")
 
+    //Google Location Service
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    //Asking Permission
+    implementation("com.google.accompanist:accompanist-permissions:0.31.3-beta")
+
     implementation("io.coil-kt:coil-compose:2.5.0")
 
     //Room

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GWeather</string>
+    <string name="sun_rise">Sun Rise</string>
+    <string name="sun_set">Sun Set</string>
 </resources>
