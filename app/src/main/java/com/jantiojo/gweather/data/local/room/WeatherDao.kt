@@ -1,4 +1,4 @@
-package com.jantiojo.gweather.data.room
+package com.jantiojo.gweather.data.local.room
 
 import androidx.room.Dao
 import androidx.room.Insert

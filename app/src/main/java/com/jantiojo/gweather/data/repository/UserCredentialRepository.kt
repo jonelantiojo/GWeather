@@ -28,7 +28,7 @@ class UserCredentialRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun getAllUserCredentials(): Flow<List<UserCredentialEntity>> {
+     fun getAllUserCredentials(): Flow<List<UserCredentialEntity>> {
         return flow {
             emit(localDataSource.getAllCredentials())
         }.flowOn(Dispatchers.IO)

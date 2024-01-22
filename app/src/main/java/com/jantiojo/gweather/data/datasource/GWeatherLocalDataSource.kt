@@ -1,7 +1,7 @@
 package com.jantiojo.gweather.data.datasource
 
 import com.jantiojo.gweather.data.entity.CurrentWeatherEntity
-import com.jantiojo.gweather.data.room.WeatherDao
+import com.jantiojo.gweather.data.local.room.WeatherDao
 import javax.inject.Inject
 
 class GWeatherLocalDataSource @Inject constructor(
