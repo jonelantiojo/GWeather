@@ -18,7 +18,7 @@ class LoginViewModel @Inject constructor(
     private val repository: UserCredentialRepository
 ) : ViewModel() {
 
-    private val _loggedInState =  MutableStateFlow<UiState<Boolean>>(UiState.Idle)
+    private val _loggedInState by lazy { MutableStateFlow<UiState<Boolean>>(UiState.Idle) }
     val loggedInState = _loggedInState.asStateFlow()
     fun doLogin(username: String, password: String) {
         viewModelScope.launch {

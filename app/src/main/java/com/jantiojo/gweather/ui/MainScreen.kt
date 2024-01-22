@@ -29,7 +29,15 @@ fun MainScreen() {
         }
 
         composable(Routes.SignUp.route) {
-            SignUpScreen(navController = navController)
+            SignUpScreen(
+                onNavigateToLogin = {
+                    navController.navigate(Routes.Login.route) {
+                        popUpTo(Routes.Login.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 
         composable(Routes.Home.route) {

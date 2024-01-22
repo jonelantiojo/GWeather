@@ -17,9 +17,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,29 +35,48 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.jantiojo.gweather.R
 import com.jantiojo.gweather.core.component.DrawableIconComponent
-import com.jantiojo.gweather.ui.Routes
+import com.jantiojo.gweather.core.component.SimpleDialogComponent
 import com.jantiojo.gweather.ui.theme.GWeatherTheme
+import com.jantiojo.gweather.utils.UiState
 
 @Composable
 fun SignUpScreen(
-    navController: NavHostController = rememberNavController(),
+    onNavigateToLogin: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
-    val isSignUpSuccess by viewModel.successSignUp.collectAsStateWithLifecycle()
+
+    var openDialog by remember { mutableStateOf(false) }
+
+    val uiState by viewModel.signUpState.collectAsStateWithLifecycle()
 
     SignUpScreenContent { username, password, confirmPass ->
         viewModel.doSignUp(username, password, confirmPass)
-//        if (isSignUpSuccess) {
-//            navController.navigate(Routes.Login.route) {
-//                popUpTo(Routes.Login.route) {
-//                    inclusive = true
-//                }
-//            }
-//        }
+    }
+
+    LaunchedEffect(key1 = uiState) {
+        when (uiState) {
+            is UiState.Success -> {
+                onNavigateToLogin()
+                viewModel.resetState()
+            }
+
+            is UiState.Error -> {
+                openDialog = true
+                viewModel.resetState()
+            }
+
+            else -> Unit
+        }
+    }
+
+    if (openDialog) {
+        SimpleDialogComponent(
+            message = stringResource(id = R.string.password_did_not_match),
+            onDismissDialog = { openDialog = false },
+            onConfirm = { openDialog = false }
+        )
     }
 }
 
