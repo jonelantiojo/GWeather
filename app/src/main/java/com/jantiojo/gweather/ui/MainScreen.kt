@@ -15,7 +15,17 @@ fun MainScreen() {
     NavHost(navController = navController, startDestination = Routes.Login.route) {
 
         composable(Routes.Login.route) {
-            LoginScreen(navController = navController)
+            LoginScreen(
+                navigateToSignUpScreen = {
+                    navController.navigate(Routes.SignUp.route)
+                },
+                navigateToHomeScreen = {
+                    navController.navigate(Routes.Home.route) {
+                        popUpTo(Routes.Login.route) {
+                            inclusive = true
+                        }
+                    }
+                })
         }
 
         composable(Routes.SignUp.route) {

@@ -12,10 +12,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,21 +39,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.jantiojo.gweather.R
 import com.jantiojo.gweather.core.component.DrawableIconComponent
 import com.jantiojo.gweather.core.component.SimpleDialogComponent
-import com.jantiojo.gweather.ui.Routes
-import com.jantiojo.gweather.ui.onboarding.screen.model.LoginUiModel
 import com.jantiojo.gweather.ui.theme.GWeatherTheme
 import com.jantiojo.gweather.ui.theme.Purple40
 import com.jantiojo.gweather.utils.UiState
-import timber.log.Timber
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
+    navigateToHomeScreen: () -> Unit,
+    navigateToSignUpScreen: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.loggedInState.collectAsStateWithLifecycle()
@@ -57,32 +57,27 @@ fun LoginScreen(
 
     LoginScreenContent(
         onClickSignUp = {
-            navController.navigate(Routes.SignUp.route)
+            navigateToSignUpScreen()
         },
         onLoginClick = { username, password ->
-
-            Timber.d("Clicked ...")
-//            viewModel.doLogin(username, password)
-            navController.navigate(Routes.Home.route) {
-                popUpTo(Routes.Login.route) {
-                    inclusive = true
-                }
-            }
+            viewModel.doLogin(username, password)
         }
     )
 
-    when (uiState) {
-        is UiState.Success -> {
-            navController.navigate(Routes.Home.route) {
-                popUpTo(Routes.Login.route) {
-                    inclusive = true
-                }
+    LaunchedEffect(key1 = uiState) {
+        when (uiState) {
+            is UiState.Success -> {
+                navigateToHomeScreen()
+                viewModel.resetState()
             }
+
+            is UiState.Error -> {
+                openDialog = true
+                viewModel.resetState()
+            }
+
+            else -> Unit
         }
-
-        is UiState.Error -> openDialog = true
-
-        else -> Unit
     }
 
 
@@ -134,18 +129,32 @@ fun LoginScreenContent(
         )
 
         Spacer(modifier = Modifier.height(20.dp))
-        TextField(
-            label = { Text(text = stringResource(id = R.string.username)) },
-            value = username.value,
-            onValueChange = { username.value = it })
 
-        Spacer(modifier = Modifier.height(20.dp))
-        TextField(
-            label = { Text(text = stringResource(id = R.string.password)) },
-            value = password.value,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            onValueChange = { password.value = it })
+        Card(
+            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+        ) {
+            Column(modifier = Modifier.padding(8.dp)) {
+                OutlinedTextField(
+                    singleLine = true,
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = stringResource(id = R.string.username)) },
+                    value = username.value,
+                    onValueChange = { username.value = it })
+
+                Spacer(modifier = Modifier.height(20.dp))
+                OutlinedTextField(
+                    singleLine = true,
+                    shape = MaterialTheme.shapes.large,
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = stringResource(id = R.string.password)) },
+                    value = password.value,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    onValueChange = { password.value = it }
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
         Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {

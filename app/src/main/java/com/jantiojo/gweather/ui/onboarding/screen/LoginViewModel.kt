@@ -18,7 +18,7 @@ class LoginViewModel @Inject constructor(
     private val repository: UserCredentialRepository
 ) : ViewModel() {
 
-    private val _loggedInState by lazy { MutableStateFlow<UiState<Boolean>>(UiState.Idle) }
+    private val _loggedInState =  MutableStateFlow<UiState<Boolean>>(UiState.Idle)
     val loggedInState = _loggedInState.asStateFlow()
     fun doLogin(username: String, password: String) {
         viewModelScope.launch {
@@ -30,12 +30,16 @@ class LoginViewModel @Inject constructor(
                     )
                 }
 
-                Timber.d("test == ${credentials.contains(
-                    LoginUiModel(
-                        username = username,
-                        password = password
-                    )
-                )}")
+                Timber.d(
+                    "test == ${
+                        credentials.contains(
+                            LoginUiModel(
+                                username = username,
+                                password = password
+                            )
+                        )
+                    }"
+                )
                 if (credentials.contains(
                         LoginUiModel(
                             username = username,
@@ -49,5 +53,10 @@ class LoginViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+
+    fun resetState() {
+        _loggedInState.value = UiState.Idle
     }
 }
