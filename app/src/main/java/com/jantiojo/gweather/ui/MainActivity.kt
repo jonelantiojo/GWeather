@@ -1,6 +1,5 @@
 package com.jantiojo.gweather.ui
 
-import AnimatedBottomTabsApp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AnimatedBottomTabsApp()
+                    MainScreen()
                 }
             }
         }
