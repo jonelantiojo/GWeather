@@ -12,4 +12,7 @@
     <string name="sign_up">Sign up</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="location_permission_title">Location Permission</string>
+    <string name="location_permission_msg">Allow GWeather to access your location permission to get precise coordinates.</string>
+    <string name="allow_location_btn_label">Allow Location</string>
 </resources>

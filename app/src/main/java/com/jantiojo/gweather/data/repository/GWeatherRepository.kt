@@ -18,10 +18,10 @@ class GWeatherRepository @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun getCurrentWeather(): Flow<CurrentWeatherEntity?> {
+    suspend fun getCurrentWeather(latitude: Double, longitude: Double): Flow<CurrentWeatherEntity?> {
         return flow {
             val currentWeather =
-                remoteDataSource.getCurrentWeather(lat = "14.604", long = "120.982")
+                remoteDataSource.getCurrentWeather(lat = "$latitude", long = "$longitude")
             currentWeather?.let {
                 localDataSource.insertWeather(it)
             }
