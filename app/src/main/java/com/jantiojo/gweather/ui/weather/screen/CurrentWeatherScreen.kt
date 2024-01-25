@@ -1,6 +1,10 @@
 package com.jantiojo.gweather.ui.weather.screen
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -37,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -68,7 +73,7 @@ fun CurrentWeatherScreen(
             if (allGranted) {
                 viewModel.fetchLocation()
             } else {
-                viewModel.openAppSettings(context)
+                openAppSettings(context)
             }
         }
     )
@@ -86,6 +91,15 @@ fun CurrentWeatherScreen(
         )
     }
 }
+
+private fun openAppSettings(context: Context) {
+    val intent =
+        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", context.packageName, null)
+        }
+    ContextCompat.startActivity(context, intent, null)
+}
+
 
 @Composable
 private fun CurrentWeatherContent(
@@ -153,11 +167,20 @@ private fun WeatherInfoCard(currentWeatherUiModel: CurrentWeatherUiModel) {
                     color = Color.Black
                 )
             }
-            NetworkImage(
-                imageUrl = currentWeatherUiModel.weatherIcon,
-                modifier = Modifier
-                    .size(100.dp)
-            )
+            if (currentWeatherUiModel.isPastSixPm) {
+                Image(
+                    painter = painterResource(id = R.drawable.moon),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(100.dp)
+                )
+            } else {
+                NetworkImage(
+                    imageUrl = currentWeatherUiModel.weatherIcon,
+                    modifier = Modifier
+                        .size(100.dp)
+                )
+            }
             Text(
                 text = currentWeatherUiModel.weatherDescription,
                 style = MaterialTheme.typography.bodyLarge.copy(

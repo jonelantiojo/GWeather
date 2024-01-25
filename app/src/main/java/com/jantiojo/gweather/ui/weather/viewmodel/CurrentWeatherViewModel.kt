@@ -1,10 +1,5 @@
 package com.jantiojo.gweather.ui.weather.viewmodel
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jantiojo.gweather.data.repository.GWeatherRepository
@@ -32,7 +27,7 @@ class CurrentWeatherViewModel @Inject constructor(
         fetchLocation()
     }
 
-    private fun fetchCurrentWeather(latitude: Double, longitude: Double) = viewModelScope.launch {
+    fun fetchCurrentWeather(latitude: Double, longitude: Double) = viewModelScope.launch {
         repository.getCurrentWeather(latitude, longitude).collectLatest {
             Timber.d("fetchCurrentWeather == $it")
             if (it != null) {
@@ -49,11 +44,4 @@ class CurrentWeatherViewModel @Inject constructor(
         }
     }
 
-    fun openAppSettings(context: Context) {
-        val intent =
-            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.fromParts("package", context.packageName, null)
-            }
-        ContextCompat.startActivity(context, intent, null)
-    }
 }
