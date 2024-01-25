@@ -26,12 +26,12 @@ class GWeatherRepository @Inject constructor(
                 localDataSource.insertWeather(it)
             }
             emit(currentWeather)
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 
     suspend fun getAllWeather(): Flow<List<CurrentWeatherEntity>> {
         return flow {
             emit(localDataSource.getAllWeather())
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 }

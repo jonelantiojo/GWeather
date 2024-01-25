@@ -25,12 +25,12 @@ class UserCredentialRepository @Inject constructor(
                 )
             )
             emit(isSuccessful)
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 
      fun getAllUserCredentials(): Flow<List<UserCredentialEntity>> {
         return flow {
             emit(localDataSource.getAllCredentials())
-        }.flowOn(Dispatchers.IO)
+        }.flowOn(dispatcher)
     }
 }

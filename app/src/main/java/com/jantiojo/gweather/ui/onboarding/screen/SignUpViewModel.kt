@@ -32,12 +32,19 @@ class SignUpViewModel @Inject constructor(
             repository.saveCredential(
                 username = username.trim(),
                 password = password.trim()
-            ).collectLatest {
-                _signUpState.value = UiState.Success(true)
+            ).collectLatest { insertedSuccess ->
+                updateSignUpStateOnInfoInserted(insertedSuccess)
             }
         }
     }
 
+    fun updateSignUpStateOnInfoInserted(insertedSuccess: Boolean) {
+        _signUpState.value = if (insertedSuccess) {
+            UiState.Success(true)
+        } else {
+            UiState.Error("Account creation unsuccessful")
+        }
+    }
 
     fun resetState() {
         _signUpState.value = UiState.Idle

@@ -24,7 +24,7 @@ class LoginViewModel @Inject constructor(
     val loggedInState = _loggedInState.asStateFlow()
     fun doLogin(username: String, password: String) {
         repository.getAllUserCredentials()
-            .onEach {  users ->
+            .onEach { users ->
                 val credentials = users.map {
                     LoginUiModel(
                         username = it.username,
@@ -32,18 +32,7 @@ class LoginViewModel @Inject constructor(
                     )
                 }
 
-                if (credentials.contains(
-                        LoginUiModel(
-                            username = username,
-                            password = password
-                        )
-                    )
-                ) {
-                    mainScreenRepository.saveRouteStartDestination(Routes.Home.route)
-                    _loggedInState.value = UiState.Success(true)
-                } else {
-                    _loggedInState.value = UiState.Error("Login Error")
-                }
+                checkUserCredential(username, password, credentials)
             }
             .launchIn(viewModelScope)
     }
@@ -51,5 +40,24 @@ class LoginViewModel @Inject constructor(
 
     fun resetState() {
         _loggedInState.value = UiState.Idle
+    }
+
+    suspend fun checkUserCredential(
+        username: String,
+        password: String,
+        credentials: List<LoginUiModel>
+    ) {
+        if (credentials.contains(
+                LoginUiModel(
+                    username = username,
+                    password = password
+                )
+            )
+        ) {
+            mainScreenRepository.saveRouteStartDestination(Routes.Home.route)
+            _loggedInState.value = UiState.Success(true)
+        } else {
+            _loggedInState.value = UiState.Error("Login Error")
+        }
     }
 }
